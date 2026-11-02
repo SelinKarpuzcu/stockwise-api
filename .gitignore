@@ -38,12 +38,19 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# dotenv environment variable files
+# Environment variables
 .env
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
+.env.*
+!.env.example
+
+# SQLite database files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Generated Prisma Client
+/src/generated/prisma/
 
 # temp directory
 .temp
@@ -55,5 +62,23 @@ pids
 *.seed
 *.pid.lock
 
-# Diagnostic reports (https://nodejs.org/api/report.html)
+# Diagnostic reports
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Test files (temporarily excluded from repository)
+/test/
+/jest.config.ts
+**/*.spec.ts
+**/*.test.ts
+
+# Local development tools
+/.agents/
+/.claude/
+/.windsurf/
+/skills-lock.json
+
+# TypeScript build cache
+*.tsbuildinfo
+
+# Project-specific local documentation
+/PROJECT_STRUCTURE.md

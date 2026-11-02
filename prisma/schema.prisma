@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id String @id @default(cuid())
+  email String @unique
+  passwordHash String
+  createdAt DateTime @default(now())
+  categories Category[]
+  products Product[]
+}
+
+model Category {
+  id String @id @default(cuid())
+  name String
+  userId String
+  user User @relation(fields: [userId], references: [id]) // kategorinin userId alanını User modelinin id alanına bağlar.
+  createdAt DateTime @default(now())
+  products Product[]
+
+  // Aynı kullanıcı aynı isimle birden fazla kategori oluşturamaz.
+  @@unique([name, userId])
+}
+
+model Product {
+  id String @id @default(cuid())
+  name String
+  priceInKurus Int
+  stockQuantity Int @default(0)
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  categoryId String?
+  category Category? @relation(fields: [categoryId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

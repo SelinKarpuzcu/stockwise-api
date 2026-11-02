@@ -1,114 +1,275 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# StockWise API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A RESTful inventory management API built with **NestJS, TypeScript, Prisma, and SQLite**. StockWise allows authenticated users to manage their own products and categories through a secure, user-isolated API.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+- **Authentication:** User registration and login with JWT-based authentication.
+- **Password Security:** Passwords are hashed using bcrypt before storage.
+- **Product Management:** Create, retrieve, update, and delete products.
+- **Category Management:** Create, retrieve, update, and delete product categories.
+- **User Data Isolation:** Users can only access and manage their own products and categories.
+- **Input Validation:** Request payloads are validated using class-validator and NestJS ValidationPipe.
+- **Product–Category Relationship:** Products can optionally be assigned to categories.
+- **SQLite Database:** Lightweight relational database managed through Prisma ORM.
+- **Integer-based Pricing:** Product prices are stored in kuruş to avoid floating-point precision issues.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tech Stack
 
-## Project setup
+| Technology | Purpose |
+|---|---|
+| TypeScript | Programming language |
+| NestJS | Backend framework |
+| SQLite | Relational database |
+| Prisma ORM | Database access and migrations |
+| JWT | Authentication |
+| Passport.js | Authentication strategy |
+| bcrypt | Password hashing |
+| class-validator | Request validation |
+| class-transformer | Data transformation |
 
-```bash
-$ npm install
+## Project Structure
+
+```text
+stockwise-api/
+├── prisma/
+│   ├── migrations/
+│   │   ├── 20261024232623_init/
+│   │   │   └── migration.sql
+│   │   └── migration_lock.toml
+│   └── schema.prisma
+├── src/
+│   ├── auth/
+│   │   ├── dto/
+│   │   │   ├── login.dto.ts
+│   │   │   └── register.dto.ts
+│   │   ├── guards/
+│   │   │   └── jwt-auth.guard.ts
+│   │   ├── strategies/
+│   │   │   └── jwt.strategy.ts
+│   │   ├── auth.controller.spec.ts
+│   │   ├── auth.controller.ts
+│   │   ├── auth.module.ts
+│   │   ├── auth.service.spec.ts
+│   │   └── auth.service.ts
+│   ├── categories/
+│   │   ├── dto/
+│   │   │   ├── create-category.dto.ts
+│   │   │   └── update-category.dto.ts
+│   │   ├── categories.controller.spec.ts
+│   │   ├── categories.controller.ts
+│   │   ├── categories.module.ts
+│   │   ├── categories.service.spec.ts
+│   │   └── categories.service.ts
+│   ├── prisma/
+│   │   ├── prisma.module.ts
+│   │   ├── prisma.service.spec.ts
+│   │   └── prisma.service.ts
+│   ├── products/
+│   │   ├── dto/
+│   │   │   ├── create-product.dto.ts
+│   │   │   └── update-product.dto.ts
+│   │   ├── products.controller.spec.ts
+│   │   ├── products.controller.ts
+│   │   ├── products.module.ts
+│   │   ├── products.service.spec.ts
+│   │   └── products.service.ts
+│   ├── app.controller.spec.ts
+│   ├── app.controller.ts
+│   ├── app.module.ts
+│   ├── app.service.ts
+│   └── main.ts
+├── test/
+│   ├── app.e2e-spec.ts
+│   └── jest-e2e.json
+├── .env.example
+├── .gitignore
+├── package.json
+├── package-lock.json
+├── prisma7.config.ts
+└── README.md
 ```
 
-## Compile and run the project
+## Getting Started
+
+### Prerequisites
+
+- Node.js 24 or later
+- npm
+
+### 1. Clone the Repository
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone <repository-url>
+cd stockwise-api
 ```
 
-## Run tests
+### 2. Install Dependencies
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
 
-## Deployment
+### 3. Configure Environment Variables
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Create a `.env` file in the project root using `.env.example` as a template.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+```env
+DATABASE_URL="file:./dev.db"
+JWT_SECRET="your-long-random-secret"
+```
+
+Use a strong, randomly generated secret for `JWT_SECRET`.
+
+**Important:** Never commit your actual `.env` file or secret values to the repository.
+
+### 4. Generate Prisma Client
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npx prisma generate
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 5. Set Up the Database
 
-## Observability
+Apply the existing migrations to create the SQLite database:
 
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
+```bash
+npx prisma migrate deploy
+```
 
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
+### 6. Start the Development Server
 
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
+```bash
+npm run start:dev
+```
 
-## Resources
+The API will be available at:
 
-Check out a few resources that may come in handy when working with NestJS:
+```text
+http://localhost:3000/api
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observer](https://observer.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## API Endpoints
 
-## Support
+All endpoints use the `/api` prefix.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Authentication
 
-## Stay in touch
+| Method | Endpoint | Description | Authentication |
+|---|---|---|---|
+| POST | `/auth/register` | Register a new user | No |
+| POST | `/auth/login` | Log in and receive a JWT | No |
+| GET | `/auth/me` | Get authenticated user information | Yes |
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Categories
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/categories` | Create a category |
+| GET | `/categories` | List the user's categories |
+| GET | `/categories/:id` | Get a category by ID |
+| PATCH | `/categories/:id` | Update a category |
+| DELETE | `/categories/:id` | Delete a category |
+
+### Products
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/products` | Create a product |
+| GET | `/products` | List the user's products |
+| GET | `/products/:id` | Get a product by ID |
+| PATCH | `/products/:id` | Update a product |
+| DELETE | `/products/:id` | Delete a product |
+
+## Authentication
+
+Register a user:
+
+```http
+POST /api/auth/register
+Content-Type: application/json
+```
+
+```json
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+Log in to receive an access token:
+
+```http
+POST /api/auth/login
+Content-Type: application/json
+```
+
+```json
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+For protected endpoints, include the token in the request header:
+
+```http
+Authorization: Bearer <your-access-token>
+```
+
+## Example Product Request
+
+```http
+POST /api/products
+Authorization: Bearer <your-access-token>
+Content-Type: application/json
+```
+
+```json
+{
+  "name": "Wireless Mouse",
+  "priceInKurus": 75000,
+  "stockQuantity": 25,
+  "categoryId": "your-category-id"
+}
+```
+
+The `priceInKurus` field represents the product price in kuruş. For example, `75000` represents 750.00 TRY.
+
+The `stockQuantity` field is optional and defaults to `0`. The `categoryId` field is also optional.
+
+## Validation and Security
+
+- Protected endpoints require a valid JWT.
+- Passwords are stored as bcrypt hashes.
+- Users cannot access or modify resources belonging to other users.
+- Product and category queries are scoped to the authenticated user.
+- Products can only be assigned to categories owned by the same user.
+- Incoming request data is validated using DTOs.
+- Unknown request properties are rejected.
+- JWT tokens expire after one hour.
+
+## Error Handling
+
+The API uses standard HTTP status codes, including:
+
+| Status Code | Description |
+|---|---|
+| 200 | Request successful |
+| 201 | Resource created |
+| 400 | Invalid request data |
+| 401 | Missing or invalid authentication |
+| 404 | Resource not found |
+| 409 | Conflict, such as an existing account or category |
+
+## Build
+
+Compile the application:
+
+```bash
+npm run build
+```
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project was developed as a backend development internship assignment and is not published under an open-source license.
